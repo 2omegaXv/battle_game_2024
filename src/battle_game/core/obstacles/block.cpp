@@ -1,4 +1,5 @@
 #include "battle_game/core/obstacles/block.h"
+#include <glm/common.hpp>
 
 namespace battle_game::obstacle {
 
@@ -14,6 +15,16 @@ bool Block::IsBlocked(glm::vec2 p) const {
   p = WorldToLocal(p);
   return p.x <= scale_.x && p.x >= -scale_.x && p.y <= scale_.y &&
          p.y >= -scale_.y;
+}
+
+bool Block::IsBlockedX(glm::vec2 p) const {
+  auto p_ = WorldToLocal(p);
+  return IsBlocked(p) && glm::abs(p_.x)>=glm::abs(p_.y);
+}
+
+bool Block::IsBlockedY(glm::vec2 p) const {
+  auto p_ = WorldToLocal(p);
+  return IsBlocked(p) && glm::abs(p_.x)<=glm::abs(p_.y);
 }
 
 void Block::Render() {

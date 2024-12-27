@@ -147,6 +147,30 @@ bool GameCore::IsBlockedByObstacles(glm::vec2 p) const {
   return false;
 }
 
+int GameCore::IsBlockedByObstaclesX(glm::vec2 p) const {
+  if (IsOutOfRangeX(p)) {
+    return 1;
+  }
+  for (auto &obstacle : obstacles_) {
+    if (obstacle.second->IsBlockedX(p)) {
+      return 2;
+    }
+  }
+  return 0;
+}
+
+int GameCore::IsBlockedByObstaclesY(glm::vec2 p) const {
+  if (IsOutOfRangeY(p)) {
+    return 1;
+  }
+  for (auto &obstacle : obstacles_) {
+    if (obstacle.second->IsBlockedY(p)) {
+      return 2;
+    }
+  }
+  return 0;
+}
+
 Obstacle *GameCore::GetBlockedObstacle(glm::vec2 p) const {
   if (!IsOutOfRange(p)) {
     for (auto &obstacle : obstacles_)
@@ -311,6 +335,14 @@ glm::vec2 GameCore::RandomInCircle() {
 bool GameCore::IsOutOfRange(glm::vec2 p) const {
   return p.x < boundary_low_.x || p.x > boundary_high_.x ||
          p.y < boundary_low_.y || p.y > boundary_high_.y;
+}
+
+bool GameCore::IsOutOfRangeX(glm::vec2 p) const {
+  return p.x < boundary_low_.x || p.x > boundary_high_.x;
+}
+
+bool GameCore::IsOutOfRangeY(glm::vec2 p) const {
+  return p.y < boundary_low_.y || p.y > boundary_high_.y;
 }
 
 std::vector<const char *> GameCore::GetSelectableUnitList() const {

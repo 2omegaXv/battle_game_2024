@@ -10,6 +10,8 @@ class Obstacle : public Object {
            glm::vec2 position,
            float rotation = 0.0f);
   [[nodiscard]] virtual bool IsBlocked(glm::vec2 p) const = 0;
+  [[nodiscard]] virtual bool IsBlockedX(glm::vec2 p) const = 0;
+  [[nodiscard]] virtual bool IsBlockedY(glm::vec2 p) const = 0;
   void Update() override;
   void Render() override;
   virtual std::pair<glm::vec2, glm::vec2> GetSurfaceNormal(glm::vec2 origin,

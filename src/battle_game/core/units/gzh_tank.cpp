@@ -169,11 +169,11 @@ void RachTank::Fire() {
     if (player) {
       auto &input_data = player->GetInputData();
       if (input_data.mouse_button_down[GLFW_MOUSE_BUTTON_LEFT]) {
-        auto velocity = Rotate(glm::vec2{0.0f, 20.0f}, turret_rotation_);
-        GenerateBullet<bullet::CannonBall>(
+        auto velocity = Rotate(glm::vec2{0.0f, 30.0f}, turret_rotation_);
+        GenerateBullet<bullet::ReflCannonBall>(
             position_ + Rotate({0.0f, 1.2f}, turret_rotation_),
             turret_rotation_, GetDamageScale(), velocity);
-        fire_count_down_ = 1;  // Fire interval 1 second.
+        fire_count_down_ = 20;  // Fire interval 1 second.
       }
     }
   }
