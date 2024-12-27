@@ -16,9 +16,8 @@ RachTank::RachTank(GameCore *game_core, uint32_t id, uint32_t player_id)
   if (!~tank_body_model_index) {
     auto mgr = AssetsManager::GetInstance();
     {
-      /* Tank Body */
-      tank_body_model_index = mgr->RegisterModel(
-          {
+      /* Tank Body */ 
+          std::vector<ObjectVertex> body_vertices = {
               // dark blue 
               {{0.0f, 0.5f}, {0.0f, 0.0f}, {0.055f, 0.203f, 0.531f, 1.0f}},
               {{-1.0f, -1.0f}, {0.0f, 0.0f}, {0.055f, 0.203f, 0.531f, 1.0f}},
@@ -28,9 +27,40 @@ RachTank::RachTank(GameCore *game_core, uint32_t id, uint32_t player_id)
               {{1.0f, -1.0f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}},
               {{0.5f, -1.0f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}},
               {{-0.15f, -0.52f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}},
-              {{0.27f, 0.1f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}},
-          },
-          {0, 1, 2, 0, 2, 3, 4, 5, 6, 4, 6, 7});
+              {{0.27f, 0.1f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}},{{0.52f, -0.3f}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}}
+          };
+          std::vector<uint32_t> body_indices = {
+              // Dark blue  (indices 0..3)
+              0, 1, 2,    0, 2, 3,
+              // Light blue (indices 4..7)
+              8, 6, 7,    4,5,8, 4,7,8, 8,6
+          };
+          const float centerX = 0.0f;
+          const float centerY = -1.0f;
+          const float radius  = 0.5f;
+          const int   segments = 32;
+          body_indices.push_back(segments+8);
+          // Store the first index of the circle
+          unsigned int circleStart = static_cast<unsigned int>(body_vertices.size());
+      
+          for (int i = 0; i < segments; i++) {
+              float theta = (0.6f * static_cast<float>(M_PI)) * (static_cast<float>(i) / segments);
+              float px = centerX + radius * std::cos(theta);
+              float py = centerY + radius * std::sin(theta);
+      
+              // Push each circle vertex with your chosen color (example: same light blue)
+              body_vertices.push_back({{px, py}, {0.0f, 0.0f}, {0.0f, 0.668f, 0.906f, 1.0f}});
+          }
+      
+          // 4) Create indices for a line loop around the circle
+          for (int i = 0; i < segments-1; i++) {
+              body_indices.push_back(circleStart-1);
+              body_indices.push_back(circleStart + i);
+              body_indices.push_back(circleStart + i+1);
+          }
+
+    
+      tank_body_model_index = mgr->RegisterModel(body_vertices,body_indices);
     }
 
     {
